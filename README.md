@@ -1,1 +1,4 @@
-# jiss-file-service
+File Service
+------------
+
+File upload/distribution component
