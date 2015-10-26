@@ -7,22 +7,41 @@ from tornado.options import options
 class FilesServiceHandler(tornado.web.RequestHandler):
     def initialize(self, logger, mongodb):
         self.logger = logger
-        self.mongodb = mongodb
+        self.mongodb = mongodb[options.db_name]['Files']
 
     @tornado.web.asynchronous
     @tornado.gen.coroutine
     def post(self):
         self.logger.info('Request to file upload')
 
+        result = []
+
         for item in self.request.files.values():
-            file_info = item[0]
+            for file_info in item:
+                timestamp = time.time()
 
-            self.logger.info('File uploaded: %s with mime type %s' % (file_info['filename'], file_info['content_type']))
-            name = '%s-%s' % (time.time(), file_info['filename'])
+                data = {
+                    'name': '%s-%s' % (timestamp, file_info['filename']),
+                    'location': 'TBD',
+                    'context': 'context',
+                    'realName': file_info['filename'],
+                    'mimeType': file_info['content_type'],
+                    'deleted': False,
+                    'timestamp': timestamp,
+                    'restrictions': {
+                        'quota': False,
+                        'session': False
+                    }
+                }
 
-            with open('%s/%s' % (options.files_dir, name), 'w') as f:
-                f.write(file_info['body'])
+                self.logger.info('File uploaded: %s with mime type %s' % (data['realName'], data['mimeType']))
 
-            self.logger.info('File saved at %s' % name)
+                with open('%s/%s' % (options.files_dir, data['name']), 'w') as f:
+                    f.write(file_info['body'])
 
-        self.write('done')
+                self.logger.info('File saved at %s' % data['name'])
+
+                yield self.mongodb.save(data)
+                result.append(data)
+
+        self.write(dumps(result))
