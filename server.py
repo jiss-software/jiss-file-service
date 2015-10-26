@@ -1,16 +1,17 @@
 import tornado.ioloop
 import tornado.web
 import logging
-from handler import HealthCheckHandler
+from handler import HealthCheckHandler, FilesServiceHandler
 import motor
 from tornado.options import define, options
 import os
 
-define("port", default=33001, help="Application port")
+define("port", default=33003, help="Application port")
 define("db_address", default="mongodb://localhost:27017", help="Database address")
-define("db_name", default="test", help="Database name")
+define("db_name", default="Files", help="Database name")
 define("max_buffer_size", default=50 * 1024**2, help="")
 define("log_dir", default="log", help="Logger directory")
+define("files_dir", default="files", help="Files directory")
 
 if not os.path.exists(options.log_dir):
     os.makedirs(options.log_dir)
@@ -31,6 +32,7 @@ context = dict(
 
 app = tornado.web.Application([
     (r"/", HealthCheckHandler, context),
+    (r"/files", FilesServiceHandler, context),
 ], autoreload=True)
 
 app.listen(options.port)
