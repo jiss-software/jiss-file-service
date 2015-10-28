@@ -1,7 +1,7 @@
 import tornado.ioloop
 import tornado.web
 import logging
-from handler import HealthCheckHandler, FilesServiceHandler
+from handler import HealthCheckHandler, RootHandler, NameHandler
 import motor
 from tornado.options import define, options
 import os
@@ -32,7 +32,8 @@ context = dict(
 
 app = tornado.web.Application([
     (r"/", HealthCheckHandler, context),
-    (r"/files", FilesServiceHandler, context),
+    (r"/files", RootHandler, context),
+    (r"/files/([^/]*)", NameHandler, context),
 ], autoreload=True)
 
 app.listen(options.port)

@@ -7,6 +7,7 @@ __pycache__/
 *.iml
 log
 tmp
+files
 
 # Distribution / packaging
 .Python

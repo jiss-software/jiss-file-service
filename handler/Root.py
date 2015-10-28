@@ -4,7 +4,7 @@ from bson.json_util import dumps
 from tornado.options import options
 
 
-class FilesServiceHandler(tornado.web.RequestHandler):
+class RootHandler(tornado.web.RequestHandler):
     def initialize(self, logger, mongodb):
         self.logger = logger
         self.mongodb = mongodb[options.db_name]['Files']
@@ -45,3 +45,4 @@ class FilesServiceHandler(tornado.web.RequestHandler):
                 result.append(data)
 
         self.write(dumps(result))
+
