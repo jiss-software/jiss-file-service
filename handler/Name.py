@@ -1,12 +1,10 @@
-import logging
+import core
 import os
 import tornado
 from tornado.options import options
 
 
-class NameHandler(tornado.web.RequestHandler):
-    logger = logging.getLogger('/<Name>')
-
+class NameHandler(core.BaseHandler):
     @tornado.web.asynchronous
     @tornado.gen.coroutine
     def get(self, name):
@@ -17,7 +15,7 @@ class NameHandler(tornado.web.RequestHandler):
             self.set_status(404)
             return
 
-        file_info = yield self.settings['db']['Files'].find_one({'name': name})
+        file_info = yield self.settings['db'][options.db_name]['Files'].find_one({'name': name})
         if not file_info or 'deleted' in file_info and file_info['deleted']:
             self.set_status(404)
             return
@@ -29,5 +27,5 @@ class NameHandler(tornado.web.RequestHandler):
             data = f.read()
             self.write(data)
 
-        self.logger.info('Sending file located at %s' % locator)
         self.finish()
+        self.logger.info('Sending file located at %s' % locator)

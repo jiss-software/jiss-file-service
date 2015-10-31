@@ -1,12 +1,8 @@
-import tornado.web
-import tornado.gen
-import json
-import logging
+import core
+import tornado
 
 
-class HealthCheckHandler(tornado.web.RequestHandler):
-    logger = logging.getLogger('HealthCheck')
-
+class HealthCheckHandler(core.BaseHandler):
     @tornado.web.asynchronous
     @tornado.gen.coroutine
     def get(self):
@@ -22,10 +18,7 @@ class HealthCheckHandler(tornado.web.RequestHandler):
             if components[key] is None:
                 components[key] = False
 
-        result = json.dumps({
+        self.response_json({
             'status': False not in components.values(),
             'components': components
         })
-
-        self.logger.info('Response for health check: %s' % result)
-        self.write(result)

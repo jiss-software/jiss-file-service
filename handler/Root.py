@@ -1,19 +1,16 @@
-import logging
 import tornado
+import core
 import time
-from bson.json_util import dumps
 from tornado.options import options
 
 
-class RootHandler(tornado.web.RequestHandler):
-    logger = logging.getLogger('/')
-
+class RootHandler(core.BaseHandler):
     @tornado.web.asynchronous
     @tornado.gen.coroutine
     def post(self):
         self.logger.info('Request to file upload')
 
-        collection = self.settings['db']['Files']
+        collection = self.settings['db'][options.db_name]['Files']
 
         result = []
 
@@ -45,5 +42,4 @@ class RootHandler(tornado.web.RequestHandler):
                 yield collection.save(data)
                 result.append(data)
 
-        self.write(dumps(result))
-
+        self.response_json(result)
