@@ -2,7 +2,7 @@ from tornado.options import define, options
 from handler import HealthCheckHandler, RootHandler, NameHandler
 import os
 
-define("port", default=33001, help="Application port")
+define("port", default=33003, help="Application port")
 define("db_address", default="mongodb://localhost:27017", help="Database address")
 define("db_name", default="test", help="Database name")
 define("max_buffer_size", default=50 * 1024**2, help="")
