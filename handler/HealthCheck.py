@@ -1,23 +1,22 @@
-import tornado
+import tornado.web
+import tornado.gen
 import json
+import logging
 
 
 class HealthCheckHandler(tornado.web.RequestHandler):
-    def initialize(self, logger, mongodb):
-        self.logger = logger
-        self.mongodb = mongodb
+    logger = logging.getLogger('HealthCheck')
 
     @tornado.web.asynchronous
     @tornado.gen.coroutine
     def get(self):
         self.logger.info('Request to health check')
 
-        # noinspection PyDictCreation
         components = {
             'mongodb': None
         }
 
-        components['mongodb'] = yield self.mongodb.alive()
+        components['mongodb'] = yield self.settings['db'].alive()
 
         for key in components:
             if components[key] is None:
