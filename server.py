@@ -23,7 +23,7 @@ app.listen(options.port)
 
 if __name__ == "__main__":
     try:
-        logging.info("Starting HTTP proxy on port %d" % options.port)
+        logging.info("Starting HTTP server on port %d" % options.port)
         ioLoop.start()
     except KeyboardInterrupt:
         logging.info("Shutting down server HTTP proxy on port %d" % options.port)
