@@ -6,6 +6,8 @@ from settings import routing
 from tornado.options import options
 import os
 
+tornado.options.parse_command_line()
+
 if not os.path.exists(options.log_dir):
     os.makedirs(options.log_dir)
 
@@ -14,6 +16,7 @@ logging.basicConfig(
     filename='%s/%s' % (options.log_dir, options.log_file),
     level=logging.DEBUG
 )
+
 
 logging.getLogger('INIT').info('Connecting to mongodb at: %s' % options.db_address)
 ioLoop = tornado.ioloop.IOLoop.current()
