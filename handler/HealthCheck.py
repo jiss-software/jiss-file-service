@@ -12,7 +12,10 @@ class HealthCheckHandler(core.BaseHandler):
             'mongodb': None
         }
 
-        components['mongodb'] = yield self.settings['db'].alive()
+        try:
+            components['mongodb'] = yield self.settings['db'].is_mongos
+        except:
+            pass
 
         for key in components:
             if components[key] is None:

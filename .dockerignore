@@ -1,0 +1,23 @@
+### Project
+*.sh
+log
+test
+
+### Documentation
+*.md
+LICENSE
+
+### GIT
+.gitignore
+.git
+
+### MacOS
+.DS_Store
+
+### Docker
+Dockerfile
+.dockerignore
+
+### JetBrains template
+.idea
+*.iml

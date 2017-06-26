@@ -1,4 +1,3 @@
-import tornado.ioloop
 import tornado.web
 import logging
 import motor
@@ -19,13 +18,13 @@ logging.basicConfig(
     level=logging.DEBUG
 )
 
-version = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).strip()
+version = subprocess.check_output(['cat', '/etc/hostname']).strip()
 started = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 ioLoop = tornado.ioloop.IOLoop.current()
 
 logging.getLogger('INIT').info('Connecting to mongodb at: %s' % options.db_address)
-mongodb = ioLoop.run_sync(motor.MotorClient(options.db_address).open)
+mongodb = motor.motor_tornado.MotorClient(options.db_address)
 app = tornado.web.Application(routing, db=mongodb, version=version, started=started, autoreload=options.autoreload)
 
 app.listen(options.port)

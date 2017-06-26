@@ -14,6 +14,6 @@ setup(
     ],
     install_requires=[
         'tornado==4.2.1',
-        'motor'
+        'motor==1.1'
     ]
 )
